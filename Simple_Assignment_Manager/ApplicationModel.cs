@@ -18,6 +18,119 @@ namespace Simple_Assignment_Manager
 
         private const string default_modules_data_file_path = "./modules_data.daf";
 
+        public TaskTypeModel start_task_type_obj = null;
+
+        public void add_task_type(TaskTypeModel new_task_type_obj)
+        {
+            if (start_task_type_obj == null)
+            {
+                start_task_type_obj = new_task_type_obj;
+
+                return;
+            }
+
+            TaskTypeModel temp_task_type_obj = start_task_type_obj;
+
+            while (temp_task_type_obj.next_task_type_obj != null)
+            {
+                temp_task_type_obj = temp_task_type_obj.next_task_type_obj;
+            }
+
+            temp_task_type_obj.next_task_type_obj = new_task_type_obj;
+        }
+
+        public void load_task_types()
+        {
+            TaskTypeModel misc_type_model = new TaskTypeModel();
+
+            misc_type_model.task_type_name = "Misc";
+
+            TaskTypeModel assignment_type_model = new TaskTypeModel();
+
+            assignment_type_model.task_type_name = "Assignment";
+
+            TaskTypeModel exam_type_model = new TaskTypeModel();
+
+            exam_type_model.task_type_name = "Exam";
+
+            add_task_type(misc_type_model);
+
+            add_task_type(assignment_type_model);
+
+            add_task_type(exam_type_model);
+        }
+
+        public void update_task_type_stats(TaskTypeModel current_task_type_obj, string module_filter)
+        {
+            Task temp_task_obj = start_task_obj;
+
+            current_task_type_obj.completed_count = 0;
+
+            current_task_type_obj.incomplete_count = 0;
+
+            current_task_type_obj.overdue_count = 0;
+
+            while (temp_task_obj != null)
+            {
+                if (temp_task_obj.task_type == current_task_type_obj.task_type_name)
+                {
+                    //MessageBox.Show("Entered loop");
+
+                    if (module_filter == null)
+                    {
+                        if (temp_task_obj.task_status == "Completed")
+                        {
+                            current_task_type_obj.completed_count++;
+                        }
+                        else if (temp_task_obj.task_status == "Incomplete")
+                        {
+                            current_task_type_obj.incomplete_count++;
+                        }
+                        else if (temp_task_obj.task_status == "Overdue")
+                        {
+                            current_task_type_obj.overdue_count++;
+                        }
+
+                        //MessageBox.Show($"Current completed count for all modules: {current_task_type_obj.completed_count}");
+                    }
+                    else
+                    {
+                        //MessageBox.Show($"Entered not null module filter loop, module filter is equal to {module_filter}");
+
+                        if (temp_task_obj.module_name == module_filter)
+                        {
+                            if (temp_task_obj.task_status == "Completed")
+                            {
+                                current_task_type_obj.completed_count++;
+                            }
+                            else if (temp_task_obj.task_status == "Incomplete")
+                            {
+                                current_task_type_obj.incomplete_count++;
+                            }
+                            else if (temp_task_obj.task_status == "Overdue")
+                            {
+                                current_task_type_obj.overdue_count++;
+                            }
+                        }
+                    }
+                }
+
+                temp_task_obj = temp_task_obj.next_task_obj;
+            }
+        }
+
+        public void update_all_task_type_stats()
+        {
+            TaskTypeModel temp_task_type_obj = start_task_type_obj;
+
+            while (temp_task_type_obj != null)
+            {
+                update_task_type_stats(temp_task_type_obj, null);
+
+                temp_task_type_obj = temp_task_type_obj.next_task_type_obj;
+            }
+        }
+
         public string encrypt_string(string decrypted_string)
         {
             string encrypted_string = "";
@@ -357,6 +470,8 @@ namespace Simple_Assignment_Manager
                         temp_module_obj = null;
                     }
 
+                    clear_module_name_for_tasks_with_removed_module_name_in_them(chosen_module_name);
+
                     return;
                 }
 
@@ -444,6 +559,127 @@ namespace Simple_Assignment_Manager
                     created_file_writer.Close();
                 }
             }
+        }
+
+        public void clear_module_name_for_tasks_with_removed_module_name_in_them(string removed_module_name)
+        {
+            //MessageBox.Show($"The removed module's name is: {removed_module_name}");
+
+            Task temp_task_obj = start_task_obj;
+
+            while (temp_task_obj != null)
+            {
+                if (temp_task_obj.module_name == removed_module_name)
+                {
+                    //MessageBox.Show($"Task with removed module found, name of task is: {temp_task_obj.task_name}");
+
+                    temp_task_obj.module_name = "None";
+                }
+
+                temp_task_obj = temp_task_obj.next_task_obj;
+            }
+        }
+
+        public double calculate_total_gpa(Module start_module_obj, bool is_best_case, bool is_worst_case)
+        {
+            float total_semester_graded_credits = 0;
+
+            float total_credits_and_grade_points = 0;
+
+            float final_gpa_value = 0;
+
+            float best_case_grade_value = 4.0f;
+
+            float worst_case_grade_value = 0f;
+
+            //Grade value definitions
+            float grade_AD_value = 4.0f;
+
+            float grade_A_plus_value = 4.0f;
+
+            float grade_A_value = 4.0f;
+
+            float grade_B_plus_value = 3.5f;
+
+            float grade_B_value = 3.0f;
+
+            float grade_C_plus_value = 2.5f;
+
+            float grade_C_value = 2.0f;
+
+            float grade_D_plus_value = 1.5f;
+
+            float grade_D_value = 1.0f;
+
+            float grade_F_value = 0f;
+
+            Module temp_module_obj = start_module_obj;
+
+            while (temp_module_obj != null)
+            {
+                if (temp_module_obj.module_grade != "Not received" && temp_module_obj.module_grade != "PM" && temp_module_obj.module_grade != "PX")
+                {
+                    total_semester_graded_credits += temp_module_obj.module_credits;
+                }
+
+                if (temp_module_obj.module_grade == "AD*")
+                {
+                    total_credits_and_grade_points += (temp_module_obj.module_credits * grade_AD_value);
+                }
+                else if (temp_module_obj.module_grade == "A+")
+                {
+                    total_credits_and_grade_points += (temp_module_obj.module_credits * grade_A_plus_value);
+                }
+                else if (temp_module_obj.module_grade == "A")
+                {
+                    total_credits_and_grade_points += (temp_module_obj.module_credits * grade_A_value);
+                }
+                else if (temp_module_obj.module_grade == "B+")
+                {
+                    total_credits_and_grade_points += (temp_module_obj.module_credits * grade_B_plus_value);
+                }
+                else if (temp_module_obj.module_grade == "B")
+                {
+                    total_credits_and_grade_points += (temp_module_obj.module_credits * grade_B_value);
+                }
+                else if (temp_module_obj.module_grade == "C+")
+                {
+                    total_credits_and_grade_points += (temp_module_obj.module_credits * grade_C_plus_value);
+                }
+                else if (temp_module_obj.module_grade == "C")
+                {
+                    total_credits_and_grade_points += (temp_module_obj.module_credits * grade_C_value);
+                }
+                else if (temp_module_obj.module_grade == "D+")
+                {
+                    total_credits_and_grade_points += (temp_module_obj.module_credits * grade_D_plus_value);
+                }
+                else if (temp_module_obj.module_grade == "D")
+                {
+                    total_credits_and_grade_points += (temp_module_obj.module_credits * grade_D_value);
+                }
+                else if (temp_module_obj.module_grade == "F")
+                {
+                    total_credits_and_grade_points += (temp_module_obj.module_credits * grade_F_value);
+                }
+                else if (temp_module_obj.module_grade == "Not received")
+                {
+                    if (is_best_case == true)
+                    {
+                        total_credits_and_grade_points += (temp_module_obj.module_credits * best_case_grade_value);
+                    }
+                    else if (is_worst_case == true)
+                    {
+                        total_credits_and_grade_points += (temp_module_obj.module_credits * worst_case_grade_value);
+                    }
+                }
+
+                temp_module_obj = temp_module_obj.next_module_obj;
+            }
+
+            final_gpa_value = total_credits_and_grade_points / total_semester_graded_credits;
+
+            return (double)Math.Round(final_gpa_value, 2);
         }
     }
 }

@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="Simple_Assignment_Manager.UserControls.TestCloseBtnDesignControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Simple_Assignment_Manager.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Button Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Height="10" Width="10">
+            <Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Margin="-10 -10 0 0">
+                <Path x:Name="close_btn_circle" Stroke="DimGray" Fill="Red" StrokeThickness="1" Data="M 0 5 A 5 5 0 0 1 10 5 A 5 5 0 0 1 0 5"/>
+
+                <Path x:Name="cross_design" Stroke="Black" StrokeThickness="0.2" Data="M 5 5 l 3 3 M 5 5 l -3 -3 M 5 5 l 3 -3 M 5 5 l -3 3"/>
+            </Canvas>
+        </Button>
+    </Grid>
+</UserControl>

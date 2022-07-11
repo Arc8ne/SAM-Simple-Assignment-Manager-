@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="Simple_Assignment_Manager.UserControls.TestBarGraphControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Simple_Assignment_Manager.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" FontSize="10" Foreground="White">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border BorderThickness="2" BorderBrush="Gray" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="DimGray" CornerRadius="5" Width="600" Height="300">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Subject Marks Distribution" HorizontalAlignment="Center" Margin="0 30 0 80"/>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" Margin="0 0 10 0">
+                        <Rectangle Stroke="DarkGray" StrokeThickness="1" Fill="Blue" Height="100" Width="20"/>
+
+                        <TextBlock Text="Mother Tongue"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" Margin="0 0 10 0">
+                        <Rectangle Stroke="DarkGray" StrokeThickness="1" Fill="Blue" Height="60" Width="20"/>
+
+                        <TextBlock Text="Pure Physics"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" Margin="0 0 10 0">
+                        <Rectangle Stroke="DarkGray" StrokeThickness="1" Fill="Blue" Height="30" Width="20"/>
+
+                        <TextBlock Text="Additional Maths"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" Margin="0 0 10 0">
+                        <Rectangle Stroke="DarkGray" StrokeThickness="1" Fill="Blue" Height="90" Width="20"/>
+
+                        <TextBlock Text="Pure Chemistry"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" Margin="0 0 10 0">
+                        <Rectangle Stroke="DarkGray" StrokeThickness="1" Fill="Blue" Height="50" Width="20"/>
+
+                        <TextBlock Text="English"/>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

@@ -35,29 +35,29 @@
         </Border>
 
         <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Vertical" Margin="6 0 10 0" HorizontalAlignment="Left">
-            <Button x:Name="view_tasks_btn" Background="SlateGray" Foreground="White" BorderThickness="0" FontSize="10"  Content="View Tasks" Padding="6" Margin="0 0 0 10" Width="140"/>
+            <Button x:Name="view_tasks_btn" Background="SlateGray" Foreground="White" FontSize="10"  Content="View Tasks" Padding="6" Margin="0 0 0 10" Width="140"/>
 
-            <Button x:Name="add_tasks_btn" Background="SlateGray" Foreground="White" BorderThickness="0" FontSize="10"  Content="Add Tasks" Padding="6" Margin="0 0 0 10" Width="140"/>
+            <Button x:Name="add_tasks_btn" Background="SlateGray" Foreground="White" FontSize="10"  Content="Add Tasks" Padding="6" Margin="0 0 0 10" Width="140"/>
 
-            <Button x:Name="view_modules_btn" Background="SlateGray" Foreground="White" BorderThickness="0" FontSize="10" Content="View Modules" Padding="6" Margin="0 0 0 10" Width="140"/>
+            <Button x:Name="view_modules_btn" Background="SlateGray" Foreground="White" FontSize="10" Content="View Modules" Padding="6" Margin="0 0 0 10" Width="140"/>
 
-            <Button x:Name="add_modules_btn" Background="SlateGray" Foreground="White" BorderThickness="0" FontSize="10" Content="Add Modules" Padding="6" Margin="0 0 0 10" Width="140"/>
+            <Button x:Name="add_modules_btn" Background="SlateGray" Foreground="White" FontSize="10" Content="Add Modules" Padding="6" Margin="0 0 0 10" Width="140"/>
 
-            <Button x:Name="export_task_data_btn" Background="SlateGray" Foreground="White" BorderThickness="0" FontSize="10"  Content="Export Task Data as CSV" Padding="6" Margin="0 0 0 10" Width="140"/>
+            <Button x:Name="export_task_data_btn" Background="SlateGray" Foreground="White" FontSize="10"  Content="Export Task Data as CSV" Padding="6" Margin="0 0 0 10" Width="140"/>
 
-            <Button x:Name="export_module_data_btn" Background="SlateGray" Foreground="White" BorderThickness="0" FontSize="10"  Content="Export Module Data as CSV" Padding="6" Margin="0 0 0 10" Width="140"/>
+            <Button x:Name="export_module_data_btn" Background="SlateGray" Foreground="White" FontSize="10"  Content="Export Module Data as CSV" Padding="6" Margin="0 0 0 10" Width="140"/>
 
-            <Button x:Name="bulk_file_creator_btn" Background="SlateGray" Foreground="White" BorderThickness="0" FontSize="10"  Content="Bulk File Creator" Padding="6" Margin="0 0 0 10" Width="140"/>
+            <Button x:Name="bulk_file_creator_btn" Background="SlateGray" Foreground="White" FontSize="10"  Content="Bulk File Creator" Padding="6" Margin="0 0 0 10" Width="140"/>
 
-            <Button Background="SlateGray" Foreground="White" BorderThickness="0" FontSize="10"  Content="Statistics" Padding="6" Margin="0 0 0 10" Width="140"/>
+            <Button x:Name="open_stats_dashboard_btn" Background="SlateGray" Foreground="White" FontSize="10"  Content="Statistics" Padding="6" Margin="0 0 0 10" Width="140"/>
 
-            <Button Background="SlateGray" Foreground="White" BorderThickness="0" FontSize="10"  Content="GPA" Padding="6" Margin="0 0 0 10" Width="140"/>
+            <Button x:Name="open_gpa_forecaster_btn" Background="SlateGray" Foreground="White" FontSize="10"  Content="GPA" Padding="6" Margin="0 0 0 10" Width="140"/>
 
-            <Button Background="SlateGray" Foreground="White" BorderThickness="0" FontSize="10"  Content="Settings" Padding="6" Margin="0 0 0 10" Width="140"/>
+            <Button Background="SlateGray" Foreground="White" FontSize="10"  Content="Settings" Padding="6" Margin="0 0 0 10" Width="140"/>
 
-            <Button Background="SlateGray" Foreground="White" BorderThickness="0" FontSize="10"  Content="Help" Padding="6" Margin="0 0 0 10" Width="140"/>
+            <Button Background="SlateGray" Foreground="White" FontSize="10"  Content="Help" Padding="6" Margin="0 0 0 10" Width="140"/>
 
-            <Button Background="SlateGray" Foreground="White" BorderThickness="0" FontSize="10"  Content="About" Padding="6" Margin="0 0 0 10" Width="140"/>
+            <Button Background="SlateGray" Foreground="White" FontSize="10"  Content="About" Padding="6" Margin="0 0 0 10" Width="140"/>
         </StackPanel>
     </Grid>
 </UserControl>

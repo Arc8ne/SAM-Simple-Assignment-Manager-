@@ -1,0 +1,88 @@
+﻿<UserControl x:Class="Simple_Assignment_Manager.UserControls.TripleColumnStatsCardControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Simple_Assignment_Manager.UserControls"
+             mc:Ignorable="d" 
+             Height="180" Width="400" FontSize="12" FontWeight="Bold" Foreground="White">
+    
+    <Border Background="Gray" BorderBrush="DarkGray" BorderThickness="4" CornerRadius="5">
+        <Grid x:Name="stats_card_grid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+
+                <ColumnDefinition Width="auto"/>
+
+                <ColumnDefinition Width="auto"/>
+
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock x:Name="stats_header_label" Grid.Column="0" Grid.Row="0" Text="Stats Header Label" FontWeight="Bold" Margin="10 10 0 10"/>
+
+            <Grid x:Name="stats_value_grid" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="1" Margin="0 30 0 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+
+                    <ColumnDefinition Width="*"/>
+
+                    <ColumnDefinition Width="*"/>
+
+                    <ColumnDefinition Width="*"/>
+
+                    <ColumnDefinition Width="30"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Column="1" Grid.Row="0" Text="Completed" TextAlignment="Center" Margin="0 0 0 30"/>
+
+                <TextBlock x:Name="completed_value_label" Grid.Column="1" Grid.Row="1" Text="10" HorizontalAlignment="Center"/>
+
+                <TextBlock Grid.Column="2" Grid.Row="0" TextAlignment="Center" Text="Incomplete"/>
+
+                <TextBlock x:Name="incomplete_value_label" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" Text="5"/>
+
+                <TextBlock Grid.Column="3" Grid.Row="0" TextAlignment="Center" Text="Overdue"/>
+
+                <TextBlock x:Name="overdue_value_label" Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center" Text="2"/>
+            </Grid>
+
+            <ComboBox x:Name="stats_filter_combo_box" Padding="4 2 4 0" FontWeight="Regular" Grid.Column="1" Grid.Row="0" VerticalAlignment="Top" Width="100" Height="20" Margin="10 10 10 0" SelectionChanged="stats_filter_combo_box_SelectionChanged">
+
+            </ComboBox>
+
+            <Button x:Name="toggle_visibility_btn" Background="Gray" BorderBrush="DarkGray" BorderThickness="2" FontWeight="Bold" Grid.Column="2" Grid.Row="0" Width="30" Height="20" Margin="10 10 10 10" Click="toggle_visibility_btn_Click">
+                <Canvas>
+                    <Path x:Name="plus_design" Visibility="Visible" Stroke="White" StrokeThickness="2" Data="M 0 0 h 5 M 0 0 h -5 M 0 0 v 5 M 0 0 v -5"/>
+
+                    <Path x:Name="line_design" Visibility="Collapsed" Stroke="White" StrokeThickness="2" Data="M 0 0 h 5 M 0 0 h -5"/>
+                </Canvas>
+            </Button>
+
+            <Button x:Name="toggle_percent_or_numeral_btn" Grid.Column="3" Grid.Row="0" Background="Gray" BorderBrush="DarkGray" BorderThickness="2" FontWeight="Bold" Width="30" Height="20" Margin="10 10 10 10" Click="toggle_percent_or_numeral_btn_Click">
+                <Canvas HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Path x:Name="num_icon_path" Visibility="Collapsed" Stroke="White" StrokeThickness="2" Data="M -5 6 v -10 l 9 8 v -10"/>
+
+                    <TextBlock x:Name="percent_icon" Margin="-3 -9 0 0" Visibility="Visible" Text="P" Foreground="White" FontWeight="Regular"/>
+
+                    <TextBlock x:Name="num_icon" Margin="-5 -9 0 0" Visibility="Collapsed" Text="N" Foreground="White" FontWeight="Regular"/>
+
+                    <Path x:Name="percent_icon_path" Visibility="Collapsed" Stroke="White" StrokeThickness="2" Data="M 5 -5 l -10 10 M -5 -4 A 1 1 0 0 1 -5 -2 A 1 1 0 0 1 -5 -4 M 4 3 A 1 1 0 0 1 4 5 A 1 1 0 0 1 4 3"/>
+                </Canvas>
+            </Button>
+        </Grid>
+    </Border>
+    
+</UserControl>

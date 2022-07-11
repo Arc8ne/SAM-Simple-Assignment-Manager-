@@ -52,11 +52,7 @@
             <TextBlock Grid.Column="1" Grid.Row="2" Text="Task Type:" FontSize="10"/>
 
             <ComboBox x:Name="task_type_combo_box" SelectedIndex="0" Grid.Column="2" Grid.Row="2" Padding="4" Width="300" Margin="10 0 0 20">
-                <ComboBoxItem Content="Assignment"/>
-
-                <ComboBoxItem Content="Exam"/>
-
-                <ComboBoxItem Content="Misc"/>
+                
             </ComboBox>
 
             <TextBlock Grid.Column="1" Grid.Row="3" Text="Module Name:" FontSize="10"/>

@@ -25,9 +25,17 @@ namespace Simple_Assignment_Manager
     {
         public ApplicationModel current_app_model;
 
+        public double default_main_window_width = 1000;
+
+        public double default_main_window_height = 600;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            this.Width = default_main_window_width;
+
+            this.Height = default_main_window_height;
 
             initializing_label.Visibility = Visibility.Visible;
 
@@ -58,6 +66,10 @@ namespace Simple_Assignment_Manager
 
             main_nav_bar.bulk_file_creator_btn.Click += on_nav_bar_bulk_file_creator_btn_clicked;
 
+            main_nav_bar.open_stats_dashboard_btn.Click += on_open_stats_dashboard_btn_clicked;
+
+            main_nav_bar.open_gpa_forecaster_btn.Click += on_open_gpa_forecaster_btn_clicked;
+
             add_task_dlg_ui.add_task_btn.Click += on_add_task_btn_clicked;
 
             add_module_dlg_ui.add_module_btn.Click += on_create_module_btn_clicked;
@@ -72,7 +84,27 @@ namespace Simple_Assignment_Manager
 
             update_module_combo_box();
 
+            current_app_model.load_task_types();
+
+            load_task_type_combo_box_items(current_app_model.start_task_type_obj);
+
+            init_stat_cards();
+
+            init_gpa_cards();
+
             initializing_label.Visibility = Visibility.Collapsed;
+        }
+
+        public void load_task_type_combo_box_items(TaskTypeModel start_task_type_obj)
+        {
+            TaskTypeModel temp_task_type_obj = start_task_type_obj;
+
+            while (temp_task_type_obj != null)
+            {
+                add_task_dlg_ui.task_type_combo_box.Items.Add(temp_task_type_obj.task_type_name);
+
+                temp_task_type_obj = temp_task_type_obj.next_task_type_obj;
+            }
         }
 
         public void update_task_list()
@@ -186,13 +218,25 @@ namespace Simple_Assignment_Manager
 
         private void maximize_btn_Click(object sender, RoutedEventArgs e)
         {
-            if (this.WindowState != WindowState.Normal)
+            if (this.Height == SystemParameters.WorkArea.Height && this.Width == SystemParameters.WorkArea.Width)
             {
-                this.WindowState = WindowState.Normal;
+                this.Width = default_main_window_width;
+
+                this.Height = default_main_window_height;
+
+                this.Left = (SystemParameters.WorkArea.Width / 2) - (default_main_window_width / 2);
+
+                this.Top = (SystemParameters.WorkArea.Height / 2) - (default_main_window_height / 2);
             }
             else
             {
-                this.WindowState = WindowState.Maximized;
+                this.Width = SystemParameters.WorkArea.Width;
+
+                this.Height = SystemParameters.WorkArea.Height;
+
+                this.Left = 0;
+
+                this.Top = 0;
             }
         }
 
@@ -255,6 +299,8 @@ namespace Simple_Assignment_Manager
 
         private void on_add_module_btn_clicked(object sender, RoutedEventArgs e)
         {
+            //MessageBox.Show($"Final GPA for all modules: {current_app_model.calculate_total_gpa(current_app_model.start_module_obj, false, false)}");
+
             add_module_dlg_ui.add_module_btn.Content = "Add Module";
 
             collapse_other_non_core_widgets(add_module_dlg_ui);
@@ -275,7 +321,7 @@ namespace Simple_Assignment_Manager
         {
             if ((string)(sender as Button).Content == "Add Task")
             {
-                Task task_to_create = new Task(add_task_dlg_ui.task_name_box.Text, add_task_dlg_ui.task_type_combo_box.Text, add_task_dlg_ui.module_name_box.Text, add_task_dlg_ui.deadline_box.Text, "Not Completed");
+                Task task_to_create = new Task(add_task_dlg_ui.task_name_box.Text, add_task_dlg_ui.task_type_combo_box.Text, add_task_dlg_ui.module_name_box.Text, add_task_dlg_ui.deadline_box.Text, "Incomplete");
 
                 current_app_model.add_task(task_to_create);
             }
@@ -649,6 +695,162 @@ namespace Simple_Assignment_Manager
             bulk_file_creator_dlg_ui.file_creation_result_label.Text = $"{bulk_file_creator_dlg_ui.creation_count_box.Text} {bulk_file_creator_dlg_ui.chosen_file_extension_box.Text} files created successfully.";
 
             bulk_file_creator_dlg_ui.file_creation_result_label.Visibility = Visibility.Visible;
+        }
+
+        private void on_open_stats_dashboard_btn_clicked(object sender, RoutedEventArgs e)
+        {
+            collapse_other_non_core_widgets(stats_dashboard_ui);
+
+            foreach(TripleColumnStatsCardControl child_stat_card in stats_dashboard_ui.stats_cards_stack_panel.Children)
+            {
+                //child_stat_card.stats_filter_combo_box.SelectedIndex = 0;
+            }
+
+            update_all_stat_cards_info();
+
+            stats_dashboard_ui.Visibility = Visibility.Visible;
+        }
+
+        private void init_stat_card_combo_boxes()
+        {
+            foreach (TripleColumnStatsCardControl child_stat_card in stats_dashboard_ui.stats_cards_stack_panel.Children)
+            {
+                child_stat_card.stats_filter_combo_box.SelectedIndex = 0;
+
+                child_stat_card.stats_filter_combo_box.Items.Add("All modules");
+
+                child_stat_card.stats_filter_combo_box.Items.Add("None");
+
+                Module temp_module_obj = current_app_model.start_module_obj;
+
+                while (temp_module_obj != null)
+                {
+                    child_stat_card.stats_filter_combo_box.Items.Add(temp_module_obj.module_name);
+
+                    temp_module_obj = temp_module_obj.next_module_obj;
+                }
+            }
+        }
+
+        private void init_stat_cards()
+        {
+            //stats_dashboard_ui.stats_cards_stack_panel.Children.Clear();
+
+            TaskTypeModel temp_task_type_obj = current_app_model.start_task_type_obj;
+
+            while (temp_task_type_obj != null)
+            {
+                current_app_model.update_task_type_stats(temp_task_type_obj, null);
+
+                TripleColumnStatsCardControl new_task_stat_card = new TripleColumnStatsCardControl();
+
+                new_task_stat_card.stats_header_label.Text = temp_task_type_obj.task_type_name;
+
+                new_task_stat_card.completed_value_label.Text = Convert.ToString(temp_task_type_obj.completed_count);
+
+                new_task_stat_card.incomplete_value_label.Text = Convert.ToString(temp_task_type_obj.incomplete_count);
+
+                new_task_stat_card.overdue_value_label.Text = Convert.ToString(temp_task_type_obj.overdue_count);
+
+                new_task_stat_card.represented_task_type_obj = temp_task_type_obj;
+
+                new_task_stat_card.stat_card_combo_item_changed += on_stat_card_filter_combo_box_item_changed;
+
+                new_task_stat_card.Height = 180;
+
+                new_task_stat_card.Width = 400;
+
+                new_task_stat_card.Margin = new Thickness(0,0,0,10);
+
+                stats_dashboard_ui.stats_cards_stack_panel.Children.Add(new_task_stat_card);
+
+                temp_task_type_obj = temp_task_type_obj.next_task_type_obj;
+            }
+
+            init_stat_card_combo_boxes();
+        }
+
+        private void update_stat_card_info(TripleColumnStatsCardControl chosen_stat_card)
+        {
+            chosen_stat_card.completed_value_label.Text = Convert.ToString(chosen_stat_card.represented_task_type_obj.completed_count);
+
+            chosen_stat_card.incomplete_value_label.Text = Convert.ToString(chosen_stat_card.represented_task_type_obj.incomplete_count);
+
+            chosen_stat_card.overdue_value_label.Text = Convert.ToString(chosen_stat_card.represented_task_type_obj.overdue_count);
+        }
+
+        private void update_all_stat_cards_info()
+        {
+            current_app_model.update_all_task_type_stats();
+
+            foreach(TripleColumnStatsCardControl child_stat_card in stats_dashboard_ui.stats_cards_stack_panel.Children)
+            {
+                if (child_stat_card.stats_filter_combo_box.SelectedIndex == 0)
+                {
+                    current_app_model.update_task_type_stats(child_stat_card.represented_task_type_obj, null);
+                }
+                else
+                {
+                    current_app_model.update_task_type_stats(child_stat_card.represented_task_type_obj, (string)child_stat_card.stats_filter_combo_box.SelectedItem);
+                }
+
+                update_stat_card_info(child_stat_card);
+            }
+        }
+
+        private void on_stat_card_filter_combo_box_item_changed(object sender, RoutedEventArgs e, TripleColumnStatsCardControl stat_card_sender)
+        {
+            //MessageBox.Show($"Current task type: {stat_card_sender.represented_task_type_obj.task_type_name}");
+
+            //MessageBox.Show($"Current module filter: {(sender as ComboBox).SelectedItem}");
+
+            if ((sender as ComboBox).SelectedIndex == 0)
+            {
+                current_app_model.update_task_type_stats(stat_card_sender.represented_task_type_obj, null);
+            }
+            else
+            {
+                current_app_model.update_task_type_stats(stat_card_sender.represented_task_type_obj, (string)(sender as ComboBox).SelectedItem);
+
+                //MessageBox.Show($"Current task type completed count: {stat_card_sender.represented_task_type_obj.completed_count}");
+            }
+
+            //MessageBox.Show($"Current task type completed count: {stat_card_sender.represented_task_type_obj.completed_count}.");
+
+            update_stat_card_info(stat_card_sender);
+        }
+
+        private void update_gpa_card_values()
+        {
+            gpa_dashboard_ui.actual_gpa_card.gpa_value_label.Text = Convert.ToString(current_app_model.calculate_total_gpa(current_app_model.start_module_obj, false, false));
+
+            gpa_dashboard_ui.best_case_gpa_card.gpa_value_label.Text = Convert.ToString(current_app_model.calculate_total_gpa(current_app_model.start_module_obj, true, false));
+
+            gpa_dashboard_ui.worst_case_gpa_card.gpa_value_label.Text = Convert.ToString(current_app_model.calculate_total_gpa(current_app_model.start_module_obj, false, true));
+
+            //MessageBox.Show($"First card actual height: {gpa_dashboard_ui.actual_gpa_card.ActualHeight}");
+
+            //MessageBox.Show($"Second card actual height: {gpa_dashboard_ui.best_case_gpa_card.ActualHeight}");
+        }
+
+        private void init_gpa_cards()
+        {
+            gpa_dashboard_ui.actual_gpa_card.gpa_header_label.Text = "Current GPA";
+
+            gpa_dashboard_ui.best_case_gpa_card.gpa_header_label.Text = "Estimated GPA in Best Case Scenario";
+
+            gpa_dashboard_ui.worst_case_gpa_card.gpa_header_label.Text = "Estimated GPA in Worst Case Scenario";
+
+            update_gpa_card_values();
+        }
+
+        private void on_open_gpa_forecaster_btn_clicked(object sender, RoutedEventArgs e)
+        {
+            collapse_other_non_core_widgets(gpa_dashboard_ui);
+
+            gpa_dashboard_ui.Visibility = Visibility.Visible;
+
+            update_gpa_card_values();
         }
     }
 }
