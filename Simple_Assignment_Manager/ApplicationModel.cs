@@ -330,23 +330,46 @@ namespace Simple_Assignment_Manager
             load_tasks_data();
         }
 
-        public void add_task(Task new_task)
+        //returns 0 if no duplicates are found, otherwise returns 1 if a duplicate is found
+        public int check_for_task_name_duplicates(string new_task_name)
+        {
+            Task temp_task_obj = start_task_obj;
+
+            //Check for duplicate task names
+            while (temp_task_obj != null)
+            {
+                if (new_task_name == temp_task_obj.task_name)
+                {
+                    return 1;
+                }
+
+                temp_task_obj = temp_task_obj.next_task_obj;
+            }
+
+            return 0;
+        }
+
+        //returns 0 on success, returns -1 and does not create a new task if a duplicate task with the same name has been found in the list of tasks
+        public int add_task(Task new_task)
         {
             if (start_task_obj == null)
             {
                 start_task_obj = new_task;
 
-                return;
+                return 0;
             }
 
             Task temp_task_obj = start_task_obj;
 
+            //Travel to the end of the linked list of tasks and insert the new task at the back
             while (temp_task_obj.next_task_obj != null)
             {
                 temp_task_obj = temp_task_obj.next_task_obj;
             }
 
             temp_task_obj.next_task_obj = new_task;
+
+            return 0;
         }
 
         public Task find_task_by_name(string chosen_task_name)
@@ -409,6 +432,24 @@ namespace Simple_Assignment_Manager
             chosen_task_obj.module_name = new_module_name;
 
             chosen_task_obj.deadline_date_str = new_task_deadline_str;
+        }
+
+        //returns 0 if no duplicate modules with the same name are found, otherwise returns 1 if duplicate modules with the same name are found
+        public int check_for_module_name_duplicates(string new_module_name)
+        {
+            Module temp_module_obj = start_module_obj;
+
+            while (temp_module_obj != null)
+            {
+                if (new_module_name == temp_module_obj.module_name)
+                {
+                    return 1;
+                }
+
+                temp_module_obj = temp_module_obj.next_module_obj;
+            }
+
+            return 0;
         }
 
         public void add_module(Module new_module)

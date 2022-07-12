@@ -18,6 +18,8 @@
             <RowDefinition Height="auto"/>
 
             <RowDefinition Height="auto"/>
+
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" HorizontalAlignment="Center" FontSize="14" Text="Add A New Module" Margin="0 20 0 100"/>
@@ -77,10 +79,12 @@
 
             <TextBlock Grid.Column="1" Grid.Row="2" Margin="0 4 0 0" Text="Module Credits:" FontSize="10" ToolTip="Note: Module credits refers to the number of hours per week allocated to the module."/>
 
-            <TextBox x:Name="module_credits_box" Grid.Column="2" Grid.Row="2" Padding="2" Width="300" Margin="10 0 0 60" ToolTip="Note: Module credits refers to the number of hours per week allocated to the module."/>
+            <TextBox x:Name="module_credits_box" Grid.Column="2" Grid.Row="2" Padding="2" Width="300" Margin="10 0 0 30" ToolTip="Note: Module credits refers to the number of hours per week allocated to the module."/>
         </Grid>
 
-        <Button x:Name="add_module_btn" Content="Add Module" Height="30" Width="100" Margin="0 0 0 20" HorizontalAlignment="Center" Background="SlateGray" Foreground="White" Grid.Column="0" Grid.Row="2"/>
+        <Button x:Name="add_module_btn" Content="Add Module" Height="30" Width="100" Margin="0 0 0 30" HorizontalAlignment="Center" Background="SlateGray" Foreground="White" Grid.Column="0" Grid.Row="2"/>
+
+        <TextBlock x:Name="add_module_dlg_warning_label" Visibility="Collapsed" Grid.Column="0" Grid.Row="3" Margin="0 0 0 30" Text="Another module with the same name already exists. Please use another name and try again." Foreground="Red" HorizontalAlignment="Center"/>
     </Grid>
     
 </UserControl>

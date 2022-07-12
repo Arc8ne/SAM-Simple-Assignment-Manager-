@@ -269,6 +269,11 @@ namespace Simple_Assignment_Manager
         {
             add_task_dlg_ui.add_task_btn.Content = "Add Task";
 
+            if (add_task_dlg_ui.add_task_dlg_warning_label.Visibility != Visibility.Collapsed)
+            {
+                add_task_dlg_ui.add_task_dlg_warning_label.Visibility = Visibility.Collapsed;
+            }
+
             collapse_other_non_core_widgets(add_task_dlg_ui);
 
             if (add_task_dlg_ui.Visibility == Visibility.Collapsed)
@@ -321,12 +326,34 @@ namespace Simple_Assignment_Manager
         {
             if ((string)(sender as Button).Content == "Add Task")
             {
+                if (current_app_model.check_for_task_name_duplicates(add_task_dlg_ui.task_name_box.Text) == 1)
+                {
+                    add_task_dlg_ui.add_task_dlg_warning_label.Visibility = Visibility.Visible;
+
+                    return;
+                }
+                else
+                {
+                    add_task_dlg_ui.add_task_dlg_warning_label.Visibility = Visibility.Collapsed;
+                }
+
                 Task task_to_create = new Task(add_task_dlg_ui.task_name_box.Text, add_task_dlg_ui.task_type_combo_box.Text, add_task_dlg_ui.module_name_box.Text, add_task_dlg_ui.deadline_box.Text, "Incomplete");
 
                 current_app_model.add_task(task_to_create);
             }
             else if ((string)(sender as Button).Content == "Apply Changes")
             {
+                if (current_app_model.check_for_task_name_duplicates(add_task_dlg_ui.task_name_box.Text) == 1 && add_task_dlg_ui.selected_task_name != add_task_dlg_ui.task_name_box.Text)
+                {
+                    add_task_dlg_ui.add_task_dlg_warning_label.Visibility = Visibility.Visible;
+
+                    return;
+                }
+                else
+                {
+                    add_task_dlg_ui.add_task_dlg_warning_label.Visibility = Visibility.Collapsed;
+                }
+
                 if (add_task_dlg_ui.selected_task_name != null)
                 {
                     current_app_model.edit_task_by_name(add_task_dlg_ui.selected_task_name, add_task_dlg_ui.task_name_box.Text, add_task_dlg_ui.task_type_combo_box.Text, add_task_dlg_ui.module_name_box.Text, add_task_dlg_ui.deadline_box.Text);
@@ -421,12 +448,34 @@ namespace Simple_Assignment_Manager
         {
             if ((string)(sender as Button).Content == "Add Module")
             {
+                if (current_app_model.check_for_module_name_duplicates(add_module_dlg_ui.module_name_box.Text) == 1)
+                {
+                    add_module_dlg_ui.add_module_dlg_warning_label.Visibility = Visibility.Visible;
+
+                    return;
+                }
+                else
+                {
+                    add_module_dlg_ui.add_module_dlg_warning_label.Visibility = Visibility.Collapsed;
+                }
+
                 Module module_to_create = new Module(add_module_dlg_ui.module_name_box.Text, add_module_dlg_ui.module_grade_combo_box.Text, Convert.ToInt32(add_module_dlg_ui.module_credits_box.Text));
 
                 current_app_model.add_module(module_to_create);
             }
             else if ((string)(sender as Button).Content == "Apply Changes")
             {
+                if (current_app_model.check_for_module_name_duplicates(add_module_dlg_ui.module_name_box.Text) == 1 && add_module_dlg_ui.selected_module_name != add_module_dlg_ui.module_name_box.Text)
+                {
+                    add_module_dlg_ui.add_module_dlg_warning_label.Visibility = Visibility.Visible;
+
+                    return;
+                }
+                else
+                {
+                    add_module_dlg_ui.add_module_dlg_warning_label.Visibility = Visibility.Collapsed;
+                }
+
                 if (add_module_dlg_ui.selected_module_name != null)
                 {
                     current_app_model.edit_module_by_name(add_module_dlg_ui.selected_module_name, add_module_dlg_ui.module_name_box.Text, add_module_dlg_ui.module_grade_combo_box.Text, Convert.ToInt32(add_module_dlg_ui.module_credits_box.Text));

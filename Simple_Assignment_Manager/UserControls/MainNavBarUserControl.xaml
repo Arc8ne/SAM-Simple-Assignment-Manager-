@@ -53,11 +53,11 @@
 
             <Button x:Name="open_gpa_forecaster_btn" Background="SlateGray" Foreground="White" FontSize="10"  Content="GPA" Padding="6" Margin="0 0 0 10" Width="140"/>
 
-            <Button Background="SlateGray" Foreground="White" FontSize="10"  Content="Settings" Padding="6" Margin="0 0 0 10" Width="140"/>
+            <Button ToolTip="This feature is currently still in development." Background="SlateGray" Foreground="White" FontSize="10"  Content="Settings" Padding="6" Margin="0 0 0 10" Width="140"/>
 
-            <Button Background="SlateGray" Foreground="White" FontSize="10"  Content="Help" Padding="6" Margin="0 0 0 10" Width="140"/>
+            <Button ToolTip="This feature is currently still in development." Background="SlateGray" Foreground="White" FontSize="10"  Content="Help" Padding="6" Margin="0 0 0 10" Width="140"/>
 
-            <Button Background="SlateGray" Foreground="White" FontSize="10"  Content="About" Padding="6" Margin="0 0 0 10" Width="140"/>
+            <Button ToolTip="This feature is currently still in development." Background="SlateGray" Foreground="White" FontSize="10"  Content="About" Padding="6" Margin="0 0 0 10" Width="140"/>
         </StackPanel>
     </Grid>
 </UserControl>
