@@ -382,7 +382,7 @@ namespace Simple_Assignment_Manager
             {
                 //MessageBox.Show("Remove button pressed");
 
-                current_app_model.remove_task_by_name(task_card_sender.task_name_label.Text);
+                current_app_model.remove_task(task_card_sender.task_name_label.Text, task_card_sender.task_type_label.Text, task_card_sender.module_name_label.Text, task_card_sender.due_date_label.Text, task_card_sender.task_status_label.Text);
 
                 tasks_viewer_list_ui.Visibility = Visibility.Collapsed;
 
@@ -475,6 +475,8 @@ namespace Simple_Assignment_Manager
 
                 temp_module_obj = temp_module_obj.next_module_obj;
             }
+
+            init_stat_card_combo_boxes();
         }
 
         private void on_modules_viewer_search_box_text_changed(object sender, RoutedEventArgs e)
@@ -715,6 +717,8 @@ namespace Simple_Assignment_Manager
         {
             foreach (TripleColumnStatsCardControl child_stat_card in stats_dashboard_ui.stats_cards_stack_panel.Children)
             {
+                child_stat_card.stats_filter_combo_box.Items.Clear();
+
                 child_stat_card.stats_filter_combo_box.SelectedIndex = 0;
 
                 child_stat_card.stats_filter_combo_box.Items.Add("All modules");

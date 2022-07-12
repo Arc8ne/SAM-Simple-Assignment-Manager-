@@ -59,7 +59,7 @@
                 <TextBlock x:Name="overdue_value_label" Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center" Text="2"/>
             </Grid>
 
-            <ComboBox x:Name="stats_filter_combo_box" Padding="4 2 4 0" FontWeight="Regular" Grid.Column="1" Grid.Row="0" VerticalAlignment="Top" Width="100" Height="20" Margin="10 10 10 0" SelectionChanged="stats_filter_combo_box_SelectionChanged">
+            <ComboBox x:Name="stats_filter_combo_box" SelectedIndex="0" Padding="4 2 4 0" FontWeight="Regular" Grid.Column="1" Grid.Row="0" VerticalAlignment="Top" Width="100" Height="20" Margin="10 10 10 0" SelectionChanged="stats_filter_combo_box_SelectionChanged">
 
             </ComboBox>
 

@@ -366,7 +366,7 @@ namespace Simple_Assignment_Manager
             return null;
         }
 
-        public void remove_task_by_name(string chosen_task_name)
+        public void remove_task(string chosen_task_name, string chosen_task_type, string chosen_task_module_name, string chosen_task_deadline_str, string chosen_task_status)
         {
             Task temp_task_obj = start_task_obj;
 
@@ -374,7 +374,7 @@ namespace Simple_Assignment_Manager
 
             while (temp_task_obj != null)
             {
-                if (temp_task_obj.task_name == chosen_task_name)
+                if (temp_task_obj.task_name == chosen_task_name && temp_task_obj.task_type == chosen_task_type && temp_task_obj.module_name == chosen_task_module_name && temp_task_obj.deadline_date_str == chosen_task_deadline_str && temp_task_obj.task_status == chosen_task_status)
                 {
                     if (prev_temp_task_obj != null)
                     {
