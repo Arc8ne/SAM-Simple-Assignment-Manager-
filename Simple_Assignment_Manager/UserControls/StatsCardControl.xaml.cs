@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Media.Animation;
 
 namespace Simple_Assignment_Manager.UserControls
 {
@@ -27,7 +28,11 @@ namespace Simple_Assignment_Manager.UserControls
         {
             if (plus_design.Visibility == Visibility.Visible)
             {
-                this.Height -= 150;
+                DoubleAnimation collapse_animation = new DoubleAnimation(this.Height - 150, TimeSpan.FromSeconds(0.3));
+
+                this.BeginAnimation(GPAStatCardControl.HeightProperty, collapse_animation);
+
+                //this.Height -= 150;
 
                 stats_value_label.Visibility = Visibility.Collapsed;
 
@@ -37,7 +42,11 @@ namespace Simple_Assignment_Manager.UserControls
             }
             else
             {
-                this.Height += 150;
+                DoubleAnimation collapse_animation = new DoubleAnimation(this.Height + 150, TimeSpan.FromSeconds(0.3));
+
+                this.BeginAnimation(GPAStatCardControl.HeightProperty, collapse_animation);
+
+                //this.Height += 150;
 
                 stats_value_label.Visibility = Visibility.Visible;
 
