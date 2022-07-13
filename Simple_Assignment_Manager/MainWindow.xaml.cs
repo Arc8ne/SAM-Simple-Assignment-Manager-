@@ -76,6 +76,8 @@ namespace Simple_Assignment_Manager
 
             tasks_viewer_list_ui.search_box_text_changed += on_search_box_text_change;
 
+            tasks_viewer_list_ui.module_filter_combo_box.SelectionChanged += on_task_viewer_ui_filter_box_selection_changed;
+
             modules_viewer_list_ui.search_box.TextChanged += on_modules_viewer_search_box_text_changed;
 
             export_data_csv_dlg_ui.export_task_data_btn.Click += on_begin_export_module_data_btn_clicked;
@@ -525,6 +527,26 @@ namespace Simple_Assignment_Manager
             modules_viewer_list_ui.Visibility = Visibility.Visible;
         }
 
+        private void update_tasks_viewer_ui_module_filter_box()
+        {
+            tasks_viewer_list_ui.module_filter_combo_box.Items.Clear();
+
+            tasks_viewer_list_ui.module_filter_combo_box.Items.Add("All modules");
+
+            tasks_viewer_list_ui.module_filter_combo_box.Items.Add("None");
+
+            Module temp_module_obj = current_app_model.start_module_obj;
+
+            while (temp_module_obj != null)
+            {
+                //MessageBox.Show($"Current module in tasks viewer ui update loop: {temp_module_obj.module_name}");
+
+                tasks_viewer_list_ui.module_filter_combo_box.Items.Add(temp_module_obj.module_name);
+
+                temp_module_obj = temp_module_obj.next_module_obj;
+            }
+        }
+
         public void update_module_combo_box()
         {
             add_task_dlg_ui.module_name_box.Items.Clear();
@@ -535,12 +557,16 @@ namespace Simple_Assignment_Manager
 
             while (temp_module_obj != null)
             {
+                //MessageBox.Show($"Current module in combo box update loop: {temp_module_obj.module_name}");
+
                 add_task_dlg_ui.module_name_box.Items.Add(temp_module_obj.module_name);
 
                 temp_module_obj = temp_module_obj.next_module_obj;
             }
 
             init_stat_card_combo_boxes();
+
+            update_tasks_viewer_ui_module_filter_box();
         }
 
         private void on_modules_viewer_search_box_text_changed(object sender, RoutedEventArgs e)
@@ -919,6 +945,31 @@ namespace Simple_Assignment_Manager
             gpa_dashboard_ui.Visibility = Visibility.Visible;
 
             update_gpa_card_values();
+        }
+
+        private void on_task_viewer_ui_filter_box_selection_changed(object sender, RoutedEventArgs e)
+        {
+            if ((string)tasks_viewer_list_ui.module_filter_combo_box.SelectedItem == "All modules")
+            {
+                foreach (UIElement child_task_card in tasks_viewer_list_ui.task_cards_list_panel.Children)
+                {
+                    child_task_card.Visibility = Visibility.Visible;
+                }
+
+                return;
+            }
+
+            foreach (UIElement child_task_card in tasks_viewer_list_ui.task_cards_list_panel.Children)
+            {
+                if ((child_task_card as TaskCard).module_name_label.Text == (string)tasks_viewer_list_ui.module_filter_combo_box.SelectedItem)
+                {
+                    child_task_card.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    child_task_card.Visibility = Visibility.Collapsed;
+                }
+            }
         }
     }
 }

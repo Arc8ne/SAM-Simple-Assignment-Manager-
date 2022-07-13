@@ -8,6 +8,12 @@
              MaxHeight="600" d:DesignWidth="800">
     <ScrollViewer x:Name="tasks_scroll_viewer" VerticalScrollBarVisibility="Auto">
         <Grid Background="Transparent">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
 
@@ -18,9 +24,13 @@
 
             <TextBlock Grid.Row="1" x:Name="no_tasks_label" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" Foreground="White" FontSize="10" FontWeight="DemiBold" Text="You currently do not have any assignments, exams or other tasks."/>
 
-            <StackPanel Grid.Row="1" x:Name="task_cards_list_panel" Margin="10 10 10 10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <StackPanel Grid.Row="1" Grid.ColumnSpan="2" x:Name="task_cards_list_panel" Margin="10 10 10 10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
             </StackPanel>
+
+            <ComboBox x:Name="module_filter_combo_box" Height="20" FontSize="10" FontWeight="Regular" SelectedIndex="0" Width="auto" MinWidth="160" Grid.Column="1" Grid.Row="0" Margin="10 22 10 10">
+                
+            </ComboBox>
         </Grid>
     </ScrollViewer>
 </UserControl>
