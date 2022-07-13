@@ -328,6 +328,8 @@ namespace Simple_Assignment_Manager
             {
                 if (current_app_model.check_for_task_name_duplicates(add_task_dlg_ui.task_name_box.Text) == 1)
                 {
+                    add_task_dlg_ui.add_task_dlg_warning_label.Text = "Another task with the same name already exists. Please use another name and try again.";
+
                     add_task_dlg_ui.add_task_dlg_warning_label.Visibility = Visibility.Visible;
 
                     return;
@@ -337,7 +339,20 @@ namespace Simple_Assignment_Manager
                     add_task_dlg_ui.add_task_dlg_warning_label.Visibility = Visibility.Collapsed;
                 }
 
-                Task task_to_create = new Task(add_task_dlg_ui.task_name_box.Text, add_task_dlg_ui.task_type_combo_box.Text, add_task_dlg_ui.module_name_box.Text, add_task_dlg_ui.deadline_box.Text, "Incomplete");
+                Task task_to_create = Task.create_task(add_task_dlg_ui.task_name_box.Text, add_task_dlg_ui.task_type_combo_box.Text, add_task_dlg_ui.module_name_box.Text, add_task_dlg_ui.deadline_box.Text, "Incomplete");
+
+                if (task_to_create == null)
+                {
+                    add_task_dlg_ui.add_task_dlg_warning_label.Text = "An error occurred while creating this task, please ensure you have entered the date in the correct format (DD/MM/YYYY) (e.g. 13/07/2022 instead of 13th July 2022 or something else)";
+
+                    add_task_dlg_ui.add_task_dlg_warning_label.Visibility = Visibility.Visible;
+
+                    return;
+                }
+                else
+                {
+                    add_task_dlg_ui.add_task_dlg_warning_label.Visibility = Visibility.Collapsed;
+                }
 
                 current_app_model.add_task(task_to_create);
             }

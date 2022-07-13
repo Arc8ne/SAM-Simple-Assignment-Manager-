@@ -191,6 +191,8 @@ namespace Simple_Assignment_Manager
             {
                 //MessageBox.Show($"Current task being saved: {temp_task_obj.task_name}");
 
+                temp_task_obj.update_task_status();
+
                 tasks_data_file_writer.WriteLine(encrypt_string($"{temp_task_obj.task_name},{temp_task_obj.task_type},{temp_task_obj.module_name},{temp_task_obj.deadline_date_str},{temp_task_obj.task_status}"));
 
                 temp_task_obj = temp_task_obj.next_task_obj;
@@ -228,6 +230,8 @@ namespace Simple_Assignment_Manager
                 string[] task_data_line = raw_task_data_line.Split(",");
 
                 Task new_task = new Task(task_data_line[0], task_data_line[1], task_data_line[2], task_data_line[3], task_data_line[4]);
+
+                new_task.update_task_status();
 
                 if (start_task_obj == null)
                 {
@@ -432,6 +436,8 @@ namespace Simple_Assignment_Manager
             chosen_task_obj.module_name = new_module_name;
 
             chosen_task_obj.deadline_date_str = new_task_deadline_str;
+
+            chosen_task_obj.update_task_status();
         }
 
         //returns 0 if no duplicate modules with the same name are found, otherwise returns 1 if duplicate modules with the same name are found
