@@ -8,6 +8,8 @@ namespace Simple_Assignment_Manager
 {
     public class ApplicationModel
     {
+        public const string chosen_delimiter = "|";
+
         public Task start_task_obj = null;
 
         public Module start_module_obj = null;
@@ -17,6 +19,8 @@ namespace Simple_Assignment_Manager
         private const string default_tasks_data_file_path = "./tasks_data.daf";
 
         private const string default_modules_data_file_path = "./modules_data.daf";
+
+        private const string default_app_logs_file_path = "./app_logs.txt";
 
         public TaskTypeModel start_task_type_obj = null;
 
@@ -137,7 +141,7 @@ namespace Simple_Assignment_Manager
 
             foreach(char current_char in decrypted_string)
             {
-                if (current_char != ',')
+                if (current_char != chosen_delimiter[0])
                 {
                     encrypted_string += (char)(current_char + encryption_key);
                 }
@@ -163,7 +167,7 @@ namespace Simple_Assignment_Manager
 
             foreach (char current_char in encrypted_string)
             {
-                if (current_char != ',')
+                if (current_char != chosen_delimiter[0])
                 {
                     decrypted_string += (char)(current_char - encryption_key);
                 }
@@ -193,7 +197,7 @@ namespace Simple_Assignment_Manager
 
                 temp_task_obj.update_task_status();
 
-                tasks_data_file_writer.WriteLine(encrypt_string($"{temp_task_obj.task_name},{temp_task_obj.task_type},{temp_task_obj.module_name},{temp_task_obj.deadline_date_str},{temp_task_obj.task_status}"));
+                tasks_data_file_writer.WriteLine(encrypt_string($"{temp_task_obj.task_name}{chosen_delimiter}{temp_task_obj.task_type}{chosen_delimiter}{temp_task_obj.module_name}{chosen_delimiter}{temp_task_obj.deadline_date_str}{chosen_delimiter}{temp_task_obj.task_status}"));
 
                 temp_task_obj = temp_task_obj.next_task_obj;
             }
@@ -227,7 +231,7 @@ namespace Simple_Assignment_Manager
                     break;
                 }
 
-                string[] task_data_line = raw_task_data_line.Split(",");
+                string[] task_data_line = raw_task_data_line.Split(chosen_delimiter);
 
                 Task new_task = new Task(task_data_line[0], task_data_line[1], task_data_line[2], task_data_line[3], task_data_line[4]);
 
@@ -265,7 +269,7 @@ namespace Simple_Assignment_Manager
             {
                 //MessageBox.Show($"Current task being saved: {temp_task_obj.task_name}");
 
-                modules_data_file_writer.WriteLine(encrypt_string($"{temp_module_obj.module_name},{temp_module_obj.module_grade},{temp_module_obj.module_credits}"));
+                modules_data_file_writer.WriteLine(encrypt_string($"{temp_module_obj.module_name}{chosen_delimiter}{temp_module_obj.module_grade}{chosen_delimiter}{temp_module_obj.module_credits}"));
 
                 temp_module_obj = temp_module_obj.next_module_obj;
             }
@@ -299,7 +303,7 @@ namespace Simple_Assignment_Manager
                     break;
                 }
 
-                string[] module_data_line = raw_module_data_line.Split(",");
+                string[] module_data_line = raw_module_data_line.Split(chosen_delimiter);
 
                 Module new_module = new Module(module_data_line[0], module_data_line[1], Convert.ToInt32(module_data_line[2]));
 
@@ -320,6 +324,14 @@ namespace Simple_Assignment_Manager
             modules_data_file_reader.Close();
         }
 
+        public void check_for_log_file()
+        {
+            if (!File.Exists(default_app_logs_file_path))
+            {
+                File.Create(default_app_logs_file_path).Close();
+            }
+        }
+
         public void save_all_data()
         {
             save_modules_data();
@@ -329,6 +341,8 @@ namespace Simple_Assignment_Manager
 
         public void load_all_data()
         {
+            check_for_log_file();
+
             load_modules_data();
 
             load_tasks_data();
@@ -635,10 +649,6 @@ namespace Simple_Assignment_Manager
 
             float final_gpa_value = 0;
 
-            float best_case_grade_value = 4.0f;
-
-            float worst_case_grade_value = 0f;
-
             //Grade value definitions
             float grade_AD_value = 4.0f;
 
@@ -660,11 +670,15 @@ namespace Simple_Assignment_Manager
 
             float grade_F_value = 0f;
 
+            float best_case_grade_value = grade_A_value;
+
+            float worst_case_grade_value = grade_F_value;
+
             Module temp_module_obj = start_module_obj;
 
             while (temp_module_obj != null)
             {
-                if (temp_module_obj.module_grade != "Not received" && temp_module_obj.module_grade != "PM" && temp_module_obj.module_grade != "PX")
+                if (temp_module_obj.module_grade != "PM" && temp_module_obj.module_grade != "PX")
                 {
                     total_semester_graded_credits += temp_module_obj.module_credits;
                 }
@@ -722,6 +736,13 @@ namespace Simple_Assignment_Manager
                 }
 
                 temp_module_obj = temp_module_obj.next_module_obj;
+            }
+
+            //MessageBox.Show($"Final total semester graded credits: {total_semester_graded_credits}");
+
+            if (total_semester_graded_credits == 0)
+            {
+                return 0;
             }
 
             final_gpa_value = total_credits_and_grade_points / total_semester_graded_credits;

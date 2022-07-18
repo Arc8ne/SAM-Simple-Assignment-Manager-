@@ -45,7 +45,7 @@
 
                         <Button x:Name="maximize_btn" Foreground="White" Background="SlateGray" Padding="5" FontSize="10" FontWeight="Light" Content="Maximize" Margin="0 0 10 0" Click="maximize_btn_Click"/>
 
-                        <Button x:Name="close_btn" Foreground="White" Background="SlateGray" Padding="5" FontSize="10" FontWeight="Light" Content="Close" Click="close_btn_Click"/>
+                        <Button x:Name="close_btn" ToolTip="Clicking on this button will automatically save all data and close the application." Foreground="White" Background="SlateGray" Padding="5" FontSize="10" FontWeight="Light" Content="Close" Click="close_btn_Click"/>
                     </StackPanel>
                 </Grid>
             </Border>

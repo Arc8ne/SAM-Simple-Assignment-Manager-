@@ -460,12 +460,9 @@
                                 <VisualState x:Name="Normal" />
                                 <VisualState x:Name="MouseOver">
                                     <Storyboard>
-                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).
-                      Color"
-                                                Storyboard.TargetName="Border">
-                                            <EasingColorKeyFrame KeyTime="0"
-                                         Value="SlateGray" />
-                                        </ColorAnimationUsingKeyFrames>
+                                        <ColorAnimation Storyboard.TargetProperty="(Panel.Background).
+                      Color" Storyboard.TargetName="Border" To="DimGray" Duration="0:0:0">
+                                        </ColorAnimation>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">

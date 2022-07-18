@@ -22,7 +22,7 @@
 
             <TextBox Grid.Row="0" x:Name="search_box" HorizontalAlignment="Center" Text="Search" Foreground="Gray" Padding="2" FontSize="10" FontWeight="Regular" Height="20" Width="300" Margin="10 20 10 6" GotFocus="search_box_GotFocus" LostFocus="search_box_LostFocus" TextChanged="search_box_TextChanged"/>
 
-            <TextBlock Grid.Row="1" x:Name="no_tasks_label" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" Foreground="White" FontSize="10" FontWeight="DemiBold" Text="You currently do not have any assignments, exams or other tasks."/>
+            <TextBlock Grid.Row="1" Grid.ColumnSpan="2" x:Name="no_tasks_label" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" Foreground="White" FontSize="10" FontWeight="DemiBold" Text="You currently do not have any assignments, exams or other tasks."/>
 
             <StackPanel Grid.Row="1" Grid.ColumnSpan="2" x:Name="task_cards_list_panel" Margin="10 10 10 10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 

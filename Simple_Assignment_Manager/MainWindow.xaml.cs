@@ -78,6 +78,8 @@ namespace Simple_Assignment_Manager
 
             tasks_viewer_list_ui.module_filter_combo_box.SelectionChanged += on_task_viewer_ui_filter_box_selection_changed;
 
+            tasks_viewer_list_ui.module_filter_combo_box.IsVisibleChanged += on_task_viewer_ui_filter_box_visibility_changed;
+
             modules_viewer_list_ui.search_box.TextChanged += on_modules_viewer_search_box_text_changed;
 
             export_data_csv_dlg_ui.export_task_data_btn.Click += on_begin_export_module_data_btn_clicked;
@@ -107,26 +109,13 @@ namespace Simple_Assignment_Manager
 
                 temp_task_type_obj = temp_task_type_obj.next_task_type_obj;
             }
+
+            add_task_dlg_ui.task_type_combo_box.SelectedItem = add_task_dlg_ui.task_type_combo_box.Items[0];
         }
 
         public void update_task_list()
         {
             tasks_viewer_list_ui.task_cards_list_panel.Children.Clear();
-
-            if (current_app_model.start_task_obj == null)
-            {
-                tasks_viewer_list_ui.no_tasks_label.Visibility = Visibility.Visible;
-
-                //MessageBox.Show("No tasks label visible.");
-
-                return;
-            }
-            else
-            {
-                tasks_viewer_list_ui.no_tasks_label.Visibility = Visibility.Collapsed;
-
-                //MessageBox.Show("No tasks label not visible.");
-            }
 
             Task temp_task_obj = current_app_model.start_task_obj;
 
@@ -152,6 +141,8 @@ namespace Simple_Assignment_Manager
 
                 temp_task_obj = temp_task_obj.next_task_obj;
             }
+
+            filter_task_viewer_content_by_module();
         }
 
         public void update_module_list()
@@ -326,6 +317,35 @@ namespace Simple_Assignment_Manager
 
         private void on_add_task_btn_clicked(object sender, RoutedEventArgs e)
         {
+            add_task_dlg_ui.add_task_dlg_warning_label.Visibility = Visibility.Collapsed;
+
+            //Ensure all fields are not blank
+            if (add_task_dlg_ui.task_name_box.Text == "")
+            {
+                add_task_dlg_ui.add_task_dlg_warning_label.Text = "The task name field cannot be empty, please enter a name for your task.";
+
+                add_task_dlg_ui.add_task_dlg_warning_label.Visibility = Visibility.Visible;
+
+                return;
+            }
+            else if (add_task_dlg_ui.task_name_box.Text.Contains(ApplicationModel.chosen_delimiter) == true)
+            {
+                add_task_dlg_ui.add_task_dlg_warning_label.Text = $"The task name cannot contain the '{ApplicationModel.chosen_delimiter}' character.";
+
+                add_task_dlg_ui.add_task_dlg_warning_label.Visibility = Visibility.Visible;
+
+                return;
+            }
+
+            if (add_task_dlg_ui.deadline_box.Text == "")
+            {
+                add_task_dlg_ui.add_task_dlg_warning_label.Text = "The task deadline/date field cannot be empty, please enter a deadline/date for your task using the following format (DD/MM/YYYY) (e.g. 14/07/2022).";
+
+                add_task_dlg_ui.add_task_dlg_warning_label.Visibility = Visibility.Visible;
+
+                return;
+            }
+
             if ((string)(sender as Button).Content == "Add Task")
             {
                 if (current_app_model.check_for_task_name_duplicates(add_task_dlg_ui.task_name_box.Text) == 1)
@@ -341,7 +361,7 @@ namespace Simple_Assignment_Manager
                     add_task_dlg_ui.add_task_dlg_warning_label.Visibility = Visibility.Collapsed;
                 }
 
-                Task task_to_create = Task.create_task(add_task_dlg_ui.task_name_box.Text, add_task_dlg_ui.task_type_combo_box.Text, add_task_dlg_ui.module_name_box.Text, add_task_dlg_ui.deadline_box.Text, "Incomplete");
+                Task task_to_create = Task.create_task(add_task_dlg_ui.task_name_box.Text, add_task_dlg_ui.task_type_combo_box.Text, add_task_dlg_ui.module_name_box.Text, add_task_dlg_ui.deadline_box.Text);
 
                 if (task_to_create == null)
                 {
@@ -463,6 +483,15 @@ namespace Simple_Assignment_Manager
 
         private void on_create_module_btn_clicked(object sender, RoutedEventArgs e)
         {
+            if (add_module_dlg_ui.module_name_box.Text.Contains(ApplicationModel.chosen_delimiter) == true)
+            {
+                add_module_dlg_ui.add_module_dlg_warning_label.Text = $"The module name cannot contain the '{ApplicationModel.chosen_delimiter}' character.";
+
+                add_module_dlg_ui.add_module_dlg_warning_label.Visibility = Visibility.Visible;
+
+                return;
+            }
+
             if ((string)(sender as Button).Content == "Add Module")
             {
                 if (current_app_model.check_for_module_name_duplicates(add_module_dlg_ui.module_name_box.Text) == 1)
@@ -563,6 +592,8 @@ namespace Simple_Assignment_Manager
 
                 temp_module_obj = temp_module_obj.next_module_obj;
             }
+
+            add_task_dlg_ui.module_name_box.SelectedItem = add_task_dlg_ui.module_name_box.Items[0];
 
             init_stat_card_combo_boxes();
 
@@ -947,29 +978,68 @@ namespace Simple_Assignment_Manager
             update_gpa_card_values();
         }
 
-        private void on_task_viewer_ui_filter_box_selection_changed(object sender, RoutedEventArgs e)
+        private void filter_task_viewer_content_by_module()
         {
+            int visible_filtered_task_count = 0;
+
             if ((string)tasks_viewer_list_ui.module_filter_combo_box.SelectedItem == "All modules")
             {
                 foreach (UIElement child_task_card in tasks_viewer_list_ui.task_cards_list_panel.Children)
                 {
                     child_task_card.Visibility = Visibility.Visible;
+
+                    visible_filtered_task_count++;
                 }
 
-                return;
+                tasks_viewer_list_ui.no_tasks_label.Visibility = Visibility.Collapsed;
             }
-
-            foreach (UIElement child_task_card in tasks_viewer_list_ui.task_cards_list_panel.Children)
+            else
             {
-                if ((child_task_card as TaskCard).module_name_label.Text == (string)tasks_viewer_list_ui.module_filter_combo_box.SelectedItem)
+                foreach (UIElement child_task_card in tasks_viewer_list_ui.task_cards_list_panel.Children)
                 {
-                    child_task_card.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    child_task_card.Visibility = Visibility.Collapsed;
+                    if ((child_task_card as TaskCard).module_name_label.Text == (string)tasks_viewer_list_ui.module_filter_combo_box.SelectedItem)
+                    {
+                        child_task_card.Visibility = Visibility.Visible;
+
+                        visible_filtered_task_count++;
+                    }
+                    else
+                    {
+                        child_task_card.Visibility = Visibility.Collapsed;
+                    }
                 }
             }
+
+            //MessageBox.Show($"Number of filtered visible tasks: {visible_filtered_task_count}");
+
+            //MessageBox.Show($"Current selected item in module filter box: {tasks_viewer_list_ui.module_filter_combo_box.SelectedItem}");
+
+            if (visible_filtered_task_count == 0 && (string)tasks_viewer_list_ui.module_filter_combo_box.SelectedItem != "All modules")
+            {
+                tasks_viewer_list_ui.no_tasks_label.Text = "No assignments, exams or tasks were found for this particular module.";
+
+                tasks_viewer_list_ui.no_tasks_label.Visibility = Visibility.Visible;
+            }
+            else if (visible_filtered_task_count == 0 && (string)tasks_viewer_list_ui.module_filter_combo_box.SelectedItem == "All modules")
+            {
+                tasks_viewer_list_ui.no_tasks_label.Text = "You currently do not have any assignments, exams or tasks.";
+
+                tasks_viewer_list_ui.no_tasks_label.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                tasks_viewer_list_ui.no_tasks_label.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void on_task_viewer_ui_filter_box_selection_changed(object sender, RoutedEventArgs e)
+        {
+            filter_task_viewer_content_by_module();
+        }
+
+        private void on_task_viewer_ui_filter_box_visibility_changed(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            tasks_viewer_list_ui.module_filter_combo_box.SelectedIndex = 0;
         }
     }
 }

@@ -36,9 +36,9 @@ namespace Simple_Assignment_Manager
         }
 
         //Returns a Task object if task was created successfully, otherwise returns null
-        public static Task create_task(string chosen_name, string chosen_type, string chosen_module_name, string deadline_date_text, string new_task_status)
+        public static Task create_task(string chosen_name, string chosen_type, string chosen_module_name, string deadline_date_text)
         {
-            Task new_task = new Task(chosen_name, chosen_type, chosen_module_name, deadline_date_text, new_task_status);
+            Task new_task = new Task(chosen_name, chosen_type, chosen_module_name, deadline_date_text, "Incomplete");
 
             if (new_task.is_date_input_valid(deadline_date_text) == false)
             {
@@ -47,7 +47,7 @@ namespace Simple_Assignment_Manager
                 return new_task;
             }
 
-            new_task.task_status = new_task.determine_task_status();
+            new_task.determine_task_status();
 
             new_task.task_name = chosen_name;
 
@@ -57,8 +57,6 @@ namespace Simple_Assignment_Manager
 
             new_task.deadline_date_str = deadline_date_text;
 
-            new_task.task_status = new_task_status;
-
             new_task.next_task_obj = null;
 
             return new_task;
@@ -66,7 +64,7 @@ namespace Simple_Assignment_Manager
 
         public void update_task_status()
         {
-            task_status = determine_task_status();
+            determine_task_status();
         }
 
         //Returns true if the date inputted by the user is valid, otherwise returns false
@@ -110,10 +108,8 @@ namespace Simple_Assignment_Manager
             return true;
         }
 
-        public string determine_task_status()
+        public void determine_task_status()
         {
-            string[] chosen_time = deadline_date_str.Split("/");
-
             CultureInfo original_culture = Thread.CurrentThread.CurrentCulture;
 
             Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
@@ -121,39 +117,60 @@ namespace Simple_Assignment_Manager
             //e.g. 6/1/2008 (short date string)
             string[] current_time = DateTime.Now.ToShortDateString().Split("/");
 
+            string[] chosen_time = deadline_date_str.Split("/");
+
+            foreach(string time_str in chosen_time)
+            {
+                try
+                {
+                    Convert.ToInt32(time_str);
+                }
+                catch (Exception e)
+                {
+                    System.Windows.Forms.MessageBox.Show($"Exception occurred while parsing the date time string for the task named '{task_name}'.\nObtained exception: {e}\nException message: {e.Message}");
+                }
+            }
+
+            /*
+            foreach(string date_data_str in current_time)
+            {
+                System.Windows.Forms.MessageBox.Show($"Current time date data string: {date_data_str}");
+            }
+            */
+
+            foreach(string date_data_str in chosen_time)
+            {
+                //System.Windows.Forms.MessageBox.Show($"Deadline time date data string: {date_data_str}");
+
+                try
+                {
+                    Convert.ToInt32(date_data_str);
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+
+            int current_time_total = Convert.ToInt32(current_time[0]) + (Convert.ToInt32(current_time[1]) * 31) + (Convert.ToInt32(current_time[2]) * 365);
+
+            int deadline_time_total = Convert.ToInt32(chosen_time[0]) + (Convert.ToInt32(chosen_time[1]) * 31) + (Convert.ToInt32(chosen_time[2]) * 365);
+
+            //System.Windows.Forms.MessageBox.Show($"Current time total: {current_time_total}\nDeadline time total: {deadline_time_total}");
+
             if (task_status != "Completed")
             {
-                if (Convert.ToInt32(current_time[2]) > Convert.ToInt32(chosen_time[2]))
-                {
-                    task_status = "Overdue";
-                }
-                else
+                if (current_time_total < deadline_time_total)
                 {
                     task_status = "Incomplete";
                 }
-
-                if (Convert.ToInt32(current_time[1]) > Convert.ToInt32(chosen_time[1]))
-                {
-                    task_status = "Overdue";
-                }
                 else
                 {
-                    task_status = "Incomplete";
-                }
-
-                if (Convert.ToInt32(current_time[0]) >= Convert.ToInt32(chosen_time[0]))
-                {
                     task_status = "Overdue";
-                }
-                else
-                {
-                    task_status = "Incomplete";
                 }
             }
 
             Thread.CurrentThread.CurrentCulture = original_culture;
-
-            return task_status;
         }
     }
 }
