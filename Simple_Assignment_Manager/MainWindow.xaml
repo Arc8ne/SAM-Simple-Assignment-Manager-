@@ -9,6 +9,15 @@
         mc:Ignorable="d" WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         ResizeMode="CanResizeWithGrip" Closing="on_main_window_close"
         Title="SAM - Simple Assignment Manager" Height="600" Width="1000" FontSize="16" FontWeight="Bold" Foreground="White">
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Loaded">
+            <BeginStoryboard>
+                <Storyboard x:Name="open_animation_storyboard" Storyboard.TargetProperty="Opacity">
+                    <DoubleAnimation x:Name="open_double_animation" From="0" To="1"/>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Window.Triggers>
 
     <Border RenderOptions.EdgeMode="Aliased" Background="DarkSlateGray" CornerRadius="5" BorderThickness="2 2 2 2" BorderBrush="Gray" MouseLeftButtonDown="on_main_window_border_clicked">
         <Grid x:Name="window_content_grid">

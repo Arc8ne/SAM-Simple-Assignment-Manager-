@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
 using Simple_Assignment_Manager.UserControls;
+using System.Windows.Media.Animation;
 
 namespace Simple_Assignment_Manager
 {
@@ -29,9 +30,24 @@ namespace Simple_Assignment_Manager
 
         public double default_main_window_height = 600;
 
+        DoubleAnimation main_window_opacity_animation = new DoubleAnimation();
+
+        TimeSpan main_window_opacity_animation_time = TimeSpan.FromMilliseconds(200);
+
         public MainWindow()
         {
             InitializeComponent();
+
+            open_double_animation.Duration = main_window_opacity_animation_time;
+
+            on_main_window_open_animation_complete();
+        }
+
+        private void on_main_window_open_animation_complete()
+        {
+            //MessageBox.Show($"Completed opacity: {main_window.Opacity}");
+
+            //MessageBox.Show("Completed opening animation");
 
             this.Width = default_main_window_width;
 
@@ -201,6 +217,21 @@ namespace Simple_Assignment_Manager
 
         private void close_btn_Click(object sender, RoutedEventArgs e)
         {
+            main_window_opacity_animation.Completed += after_window_close_animation_completed;
+
+            main_window_opacity_animation.From = 1;
+
+            main_window_opacity_animation.To = 0;
+
+            main_window_opacity_animation.Duration = main_window_opacity_animation_time;
+
+            main_window.BeginAnimation(OpacityProperty, main_window_opacity_animation);
+        }
+
+        private void after_window_close_animation_completed(object sender, EventArgs e)
+        {
+            main_window_opacity_animation.Completed -= after_window_close_animation_completed;
+
             Application.Current.Shutdown();
         }
 
